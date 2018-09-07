@@ -30,11 +30,11 @@
     UILabel *label1 = [[UILabel alloc] init];
     label1.center = CGPointMake(star.center.x, star.center.y + 40);
     [self.view addSubview:label1];
-    star.didEvaluationBlock = ^(CGFloat score) {
+    star.didEvaluateBlock = ^(CGFloat score) {
         label1.text = [NSString stringWithFormat:@"%.1f分", score];
         [label1 sizeToFit];
     };
-    star.didEvaluationBlock(star.currentScore);
+    star.didEvaluateBlock(star.currentScore);
 
     TTStarEvaluationView *star2 = [[TTStarEvaluationView alloc] init];
     star2.starImage = [UIImage imageNamed:@"star"];
@@ -47,11 +47,11 @@
     UILabel *label2 = [[UILabel alloc] init];
     label2.center = CGPointMake(star2.center.x, star2.center.y + 40);
     [self.view addSubview:label2];
-    star2.didEvaluationBlock = ^(CGFloat score) {
+    star2.didEvaluateBlock = ^(CGFloat score) {
         label2.text = [NSString stringWithFormat:@"%.1f分", score];
         [label2 sizeToFit];
     };
-    star2.didEvaluationBlock(star2.currentScore);
+    star2.didEvaluateBlock(star2.currentScore);
 }
 
 @end

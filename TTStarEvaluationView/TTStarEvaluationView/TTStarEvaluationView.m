@@ -147,7 +147,7 @@ _##var = var; \
         }
     }
     self.currentScore = intPart + decimalPart;
-    !self.didEvaluationBlock ?: self.didEvaluationBlock(self.currentScore);
+    !self.didEvaluateBlock ?: self.didEvaluateBlock(self.currentScore);
 }
 
 - (CGFloat)scoreMinPace {

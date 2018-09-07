@@ -28,6 +28,6 @@
 @property (nonatomic, assign) CGFloat   currentScore; // 当前分数
 @property (nonatomic, assign) CGFloat   scoreMinPace; // 分数的最小刻度，默认，有半星图片时为半星分数，否则为1星分数
 
-@property (nonatomic, strong) void(^didEvaluationBlock)(CGFloat score); // 选中星星后的回调
+@property (nonatomic, strong) void(^didEvaluateBlock)(CGFloat score); // 选中星星后的回调
 
 @end
