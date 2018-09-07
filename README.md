@@ -1,5 +1,5 @@
 # TTStarEvaluationView
-灵活的星星评价视图 flexble star evaluation view
+灵活的星星评价视图 flexible star evaluation view
 
 ```Objective-C
 @interface TTStarEvaluationView : UIView
