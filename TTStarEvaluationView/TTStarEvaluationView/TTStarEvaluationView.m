@@ -36,9 +36,9 @@ static NSString *const DefaultStarImageBase64 = @"iVBORw0KGgoAAAANSUhEUgAAAEAAAA
     self.unstarColor = [UIColor lightGrayColor];
     self.numberOfStars = 5;
     self.scorePerStar = 1;
-    self.scoreMinPace = .5;
     self.starSpace = -1;
-    self.horiInset = 5;
+    self.horiInset = 10;
+    self.canBeZero = YES;
 }
 
 #define RedrawWithVar(var, ...) if (_##var != var) { \
@@ -72,10 +72,19 @@ _##var = var; \
 
 - (void)setCurrentScore:(CGFloat)currentScore {
     currentScore = floorf(MIN(currentScore, self.numberOfStars) / self.scoreMinPace) * self.scoreMinPace;
+    if (!self.canBeZero) {
+        currentScore = MAX(currentScore, self.scoreMinPace);
+    }
     RedrawWithVar(currentScore);
 }
 
 - (void)setScoreMinPace:(CGFloat)scoreMinPace {
+    if (scoreMinPace >= 1) {
+        scoreMinPace = floor(scoreMinPace);
+    } else {
+        scoreMinPace = MIN(MAX(0.1, scoreMinPace), 0.5);
+    }
+
     if (_scoreMinPace != scoreMinPace) {
         _scoreMinPace = scoreMinPace;
         [self setCurrentScore:self.currentScore];
@@ -136,15 +145,22 @@ _##var = var; \
 }
 
 - (void)calculateScoreAtLocation:(CGPoint)location {
-    CGFloat locationX = location.x - self.horiInset;
-    NSInteger intPart = floorf(locationX / (self.starImage.size.width + self.starSpace));
-    CGFloat decimalPart = MIN((locationX - intPart * (self.starImage.size.width + self.starSpace)) / self.starImage.size.width, 1);
-    if (self.scoreMinPace == .5 * self.scorePerStar) {
-        if (decimalPart >= self.scoreMinPace) {
+    CGFloat locationX = MIN(MAX(location.x - self.horiInset, 0), CGRectGetWidth(self.bounds));
+    NSInteger intPart = 0;
+    CGFloat decimalPart = 0;
+    if (self.scoreMinPace >= self.scorePerStar) {
+        intPart = ceilf(locationX / (self.starImage.size.width + self.starSpace));
+    } else if (self.scoreMinPace == .5 * self.scorePerStar) {
+        intPart = floorf(locationX / (self.starImage.size.width + self.starSpace));
+        decimalPart = MIN((locationX - intPart * (self.starImage.size.width + self.starSpace)) / self.starImage.size.width, 1);
+        if (decimalPart >= .5) {
             decimalPart = 1;
         } else {
             decimalPart = .5;
         }
+    } else {
+        intPart = floorf(locationX / (self.starImage.size.width + self.starSpace));
+        decimalPart = MIN((locationX - intPart * (self.starImage.size.width + self.starSpace)) / self.starImage.size.width, 1);
     }
     self.currentScore = intPart + decimalPart;
     !self.didEvaluateBlock ?: self.didEvaluateBlock(self.currentScore);
